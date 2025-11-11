@@ -11,14 +11,14 @@
   </div>
 
   <div class="post-actions" style="margin-bottom:1rem;">
-    <a class="btn btn-primary" href="/blog/post/<%= post.id %>/edit">Edit</a>
+    <a class="btn btn-primary" href="<%= basePath %>/<%= post.id %>/edit">Edit</a>
 
-    <form action="/blog/post/<%= post.id %>/delete" method="post" style="display:inline-block;margin-left:0.5rem;"
+    <form action="<%= basePath %>/<%= post.id %>/delete" method="post" style="display:inline-block;margin-left:0.5rem;"
       onsubmit="return confirm('Are you sure you want to delete this post?');">
       <button type="submit" class="btn danger">Delete</button>
     </form>
   </div>
 
-  <p><a href="/blog/">← Back to All Posts</a></p>
+  <p><a href="<%= basePath %>/">← Back to All Posts</a></p>
 
   <%- include('partials/footer') %>

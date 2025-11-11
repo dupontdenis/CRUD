@@ -6,9 +6,9 @@
   </h1>
 
   <% /* formAction: default to create */ %>
-    <% var formAction=typeof formAction !=='undefined' ? formAction : '/blog/posts/new' ; %>
+    <% var formAction=typeof formAction !=='undefined' ? formAction : basePath + '/' ; %>
       <% var submitLabel=typeof submitLabel !=='undefined' ? submitLabel : 'Save Post' ; %>
-        <% var cancelHref=typeof cancelHref !=='undefined' ? cancelHref : '/blog/' ; %>
+        <% var cancelHref=typeof cancelHref !=='undefined' ? cancelHref : basePath + '/' ; %>
 
           <form id="postForm" action="<%= formAction %>" method="post">
             <% if (typeof errors !=='undefined' && errors && errors.length) { %>

@@ -14,7 +14,7 @@ export const getAllPosts = async (req, res) => {
       summary: post.getSummary(50), // Instance method
     }));
 
-    res.render("index", { posts: postsWithExtras });
+    res.render("index", { posts: postsWithExtras, basePath: req.baseUrl });
   } catch (error) {
     res.status(500).send("Error fetching posts: " + error.message);
   }
@@ -33,8 +33,9 @@ export const getPostById = async (req, res) => {
         id: post._id,
         title: post.title,
         body: post.body,
-        url: post.url, // Virtual
+        url: post.url, // Virtual (now points under /posts)
       },
+      basePath: req.baseUrl,
     });
   } catch (error) {
     res.status(500).send("Error fetching post: " + error.message);
@@ -44,10 +45,12 @@ export const getPostById = async (req, res) => {
 // Show form to create a new post
 export const showNewPostForm = (req, res) => {
   return res.render("new", {
-    formAction: "/blog/posts/new",
+    // form posts to POST / (mounted path), which is handled by router.route('/').post(createPost)
+    formAction: `${req.baseUrl}/`,
     submitLabel: "Add New Post",
-    cancelHref: "/blog/",
+    cancelHref: `${req.baseUrl}/`,
     pageTitle: "Add New Post",
+    basePath: req.baseUrl,
   });
 };
 
@@ -75,10 +78,12 @@ export const createPost = async (req, res) => {
         errors,
         title: rawTitle,
         body: rawBody,
-        formAction: "/blog/posts/new",
+        // keep formAction pointing to the collection POST endpoint
+        formAction: `${req.baseUrl}/`,
         submitLabel: "Add New Post",
-        cancelHref: "/blog/",
+        cancelHref: `${req.baseUrl}/`,
         pageTitle: "Add New Post",
+        basePath: req.baseUrl,
       });
     }
 
@@ -86,7 +91,7 @@ export const createPost = async (req, res) => {
     const saved = await newPost.save();
 
     // Redirect to the newly created post detail
-    return res.redirect(`/blog/post/${saved._id}`);
+    return res.redirect(`${req.baseUrl}/${saved._id}`);
   } catch (error) {
     console.error("Error creating post:", error);
     return res.status(500).send("Error creating post: " + error.message);
@@ -102,7 +107,7 @@ export const deletePost = async (req, res) => {
       return res.status(404).send("Post not found");
     }
     // Redirect to list after deletion
-    return res.redirect("/blog/");
+    return res.redirect(`${req.baseUrl}/`);
   } catch (error) {
     console.error("Error deleting post:", error);
     return res.status(500).send("Error deleting post: " + error.message);
@@ -118,10 +123,11 @@ export const showEditForm = async (req, res) => {
     }
     return res.render("new", {
       post: { id: post._id, title: post.title, body: post.body },
-      formAction: `/blog/post/${post._id}/edit`,
+      formAction: `${req.baseUrl}/${post._id}/edit`,
       submitLabel: "Save Changes",
-      cancelHref: `/blog/post/${post._id}`,
+      cancelHref: `${req.baseUrl}/${post._id}`,
       pageTitle: `Edit: ${post.title}`,
+      basePath: req.baseUrl,
     });
   } catch (error) {
     console.error("Error showing edit form:", error);
@@ -148,10 +154,11 @@ export const updatePost = async (req, res) => {
         errors,
         title: rawTitle,
         body: rawBody,
-        formAction: `/blog/post/${req.params.id}/edit`,
+        formAction: `${req.baseUrl}/${req.params.id}/edit`,
         submitLabel: "Save Changes",
-        cancelHref: `/blog/post/${req.params.id}`,
+        cancelHref: `${req.baseUrl}/${req.params.id}`,
         pageTitle: "Edit Post",
+        basePath: req.baseUrl,
       });
     }
 
@@ -161,7 +168,7 @@ export const updatePost = async (req, res) => {
       { new: true }
     );
     if (!updated) return res.status(404).send("Post not found");
-    return res.redirect(`/blog/post/${updated._id}`);
+    return res.redirect(`${req.baseUrl}/${updated._id}`);
   } catch (error) {
     console.error("Error updating post:", error);
     return res.status(500).send("Error updating post: " + error.message);

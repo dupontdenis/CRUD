@@ -3,24 +3,27 @@ import * as postController from "../controllers/postController.mjs";
 
 const router = express.Router();
 
-// Routes
-router.get("/", postController.getAllPosts);
-router.get("/post/:id", postController.getPostById);
-
-// Handle deletion of a post
-router.post("/post/:id/delete", postController.deletePost);
-
-// Edit routes: show edit form (GET) and handle edit submission (POST)
+// RESTful Routes (mounted at /posts in server)
+// GET /posts        -> list all posts
+// POST /posts       -> create a new post
 router
-  .route("/post/:id/edit")
+  .route("/")
+  .get(postController.getAllPosts)
+  .post(postController.createPost);
+
+// GET /posts/new    -> show new post form
+router.get("/new", postController.showNewPostForm);
+
+// GET /posts/:id    -> show single post
+router.get("/:id", postController.getPostById);
+
+// POST /posts/:id/delete -> delete (keeps POST for browser compatibility)
+router.post("/:id/delete", postController.deletePost);
+
+// GET /posts/:id/edit and POST /posts/:id/edit -> show edit form and submit updates
+router
+  .route("/:id/edit")
   .get(postController.showEditForm)
   .post(postController.updatePost);
-
-// Route to show form for creating a new post
-// Route to show form for creating a new post and to handle form submission
-router
-  .route("/posts/new")
-  .get(postController.showNewPostForm)
-  .post(postController.createPost);
 
 export default router;

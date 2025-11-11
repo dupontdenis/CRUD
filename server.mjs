@@ -10,6 +10,9 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Make the mount base available to views so templates can build URLs dynamically
+app.locals.basePath = "/posts";
+
 // Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -23,8 +26,8 @@ app.set("views", path.join(__dirname, "views"));
 await connectToDatabase();
 
 // Routes
-app.use("/blog", postRoutes);
-app.get("/", (req, res) => res.redirect("/blog"));
+app.use("/posts", postRoutes);
+app.get("/", (req, res) => res.redirect("/posts"));
 
 app.listen(PORT, () => {
   console.log(`\n🚀 Server running on http://localhost:${PORT}`);

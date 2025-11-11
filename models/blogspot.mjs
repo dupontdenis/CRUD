@@ -16,7 +16,8 @@ const BlogPostSchema = new Schema({
 
 BlogPostSchema.virtual("url").get(function () {
   // Use a regular function (not arrow) to access 'this'
-  return `/blog/post/${this._id}`;
+  // Return a mount-relative URL under /posts so views/controllers can link to the post
+  return `/posts/${this._id}`;
 });
 
 // ==============================================

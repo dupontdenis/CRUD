@@ -2,7 +2,7 @@
 
   <h1>📚 All Blog Posts</h1>
 
-  <a class="btn btn-primary" href="/blog/posts/new">NEW</a>
+  <a class="btn btn-primary" href="<%= basePath %>/new">NEW</a>
 
   <% if (posts.length===0) { %>
     <p class="message">No posts yet.</p>
@@ -10,7 +10,7 @@
       <ul>
         <% posts.forEach(post=> { %>
           <li>
-            <h3><a href="/blog/post/<%= post.id %>">
+            <h3><a href="<%= post.url %>">
                 <%= post.title %>
               </a></h3>
             <p class="muted">
